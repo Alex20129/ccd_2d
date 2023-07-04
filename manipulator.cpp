@@ -109,24 +109,18 @@ void Manipulator::solveIKforJoint(uint joint_id)
 	double jointAngleCorrection;
 	double lp=targetV.length()*effectorV.length();
 	double cosa=dp/lp;
-	if(cosa<(double)(-1.0))
+	if(cosa<-1.0)
 	{
-		cosa=(double)(-1.0);
+		cosa=-1.0;
 	}
-	else if(cosa>(double)1.0)
+	else if(cosa>1.0)
 	{
-		cosa=(double)1.0;
-	}
-	else if((double)(cosa)!=(double)(cosa)) //is nan?
-	{
-		fprintf(stdout, "cosa nan.\n");
-		cosa=(double)0.0;
+		cosa=1.0;
 	}
 	jointAngleCorrection=acos(cosa);
 	jointAngleCorrection/=M_PI;
 	jointAngleCorrection*=180.0;
 	setJointAngle(joint_id, pJointAngle->at(joint_id)+jointAngleCorrection);
-	targetV=pTargetPosition-JointPosition->at(joint_id);
 	effectorV=EffectorPosition-JointPosition->at(joint_id);
 	dp=QVector2D::dotProduct(targetV, effectorV);
 	if(jointAngleCorrection<acos(dp/lp)/M_PI*180.0)
