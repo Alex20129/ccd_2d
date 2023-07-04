@@ -16,7 +16,7 @@ FIND_PACKAGE(Qt5 COMPONENTS Widgets REQUIRED)
 
 LINK_LIBRARIES(Qt5::Widgets)
 
-ADD_EXECUTABLE(ccd_2d
+ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
 	main.cpp
 	manipulator.cpp
 	widget.cpp
