@@ -64,16 +64,12 @@ void Widget::mousePressEvent(QMouseEvent *event)
 
 void Widget::paintEvent(QPaintEvent *event)
 {
-	uint j, jnum=gManipulator->JointPosition->size(), dmax;
+	uint j, jnum=gManipulator->JointPosition->size(), dmax=gManipulator->getMaxLength();
 	QPainter local_painter(this);
 	QPoint p0, p1;
 	event->accept();
 	local_painter.setPen(*linkPen);
 
-	for(j=0, dmax=0; j<jnum; j++)
-	{
-		dmax+=gManipulator->getLinkLength(j);
-	}
 	p0.rx()=this->width()/2;
 	p0.ry()=this->height()/2;
 	local_painter.drawEllipse(p0, dmax, dmax);

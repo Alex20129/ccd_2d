@@ -22,7 +22,7 @@ void Manipulator::setJointAngle(uint joint_id, double joint_angle)
 	while(joint_id+1 > pJointAngle->size())
 	{
 		pJointAngle->append(0.0);
-		pLinkLength->append(0.0);
+		pLinkLength->append(1.0);
 	}
 	while(joint_angle>360.0)
 	{
@@ -42,7 +42,7 @@ void Manipulator::setLinkLength(uint link_id, double link_length)
 	while(link_id+1 > pLinkLength->size())
 	{
 		pJointAngle->append(0.0);
-		pLinkLength->append(0.0);
+		pLinkLength->append(1.0);
 	}
 	if(link_length>0xFFFFFFFF)
 	{
@@ -60,9 +60,9 @@ void Manipulator::setLinkLength(uint link_id, double link_length)
 	recalculatePose();
 }
 
-double Manipulator::getLinkLength(uint link_id)
+double Manipulator::getMaxLength()
 {
-	return(pLinkLength->at(link_id));
+	return(pMaxLength);
 }
 
 void Manipulator::setDesiredDeviation(double deviation)
@@ -117,13 +117,20 @@ void Manipulator::solveIKforJoint(uint joint_id)
 	{
 		cosa=1.0;
 	}
-	jointAngleCorrection=acos(cosa);
-	jointAngleCorrection/=M_PI;
-	jointAngleCorrection*=180.0;
+	jointAngleCorrection=acos(cosa)/M_PI*180.0;
 	setJointAngle(joint_id, pJointAngle->at(joint_id)+jointAngleCorrection);
 	effectorV=EffectorPosition-JointPosition->at(joint_id);
 	dp=QVector2D::dotProduct(targetV, effectorV);
-	if(jointAngleCorrection<acos(dp/lp)/M_PI*180.0)
+	cosa=dp/lp;
+	if(cosa<-1.0)
+	{
+		cosa=-1.0;
+	}
+	else if(cosa>1.0)
+	{
+		cosa=1.0;
+	}
+	if(jointAngleCorrection<acos(cosa)/M_PI*180.0)
 	{
 		jointAngleCorrection*=2.0;
 		setJointAngle(joint_id, pJointAngle->at(joint_id)-jointAngleCorrection);

@@ -17,7 +17,7 @@ public:
 	Manipulator(QObject *parent=nullptr);
 	void setJointAngle(uint joint_id, double joint_angle);
 	void setLinkLength(uint link_id, double link_length);
-	double getLinkLength(uint link_id);
+	double getMaxLength();
 
 	void setDesiredDeviation(double deviation);
 	void setMaxIterations(uint max_iterations);
@@ -31,7 +31,7 @@ private slots:
 	void on_AnimationTimer_timeout();
 private:
 	void recalculatePose();
-	double pDesiredDeviation, pActualDeviation;
+	double pDesiredDeviation, pActualDeviation, pMaxLength;
 	QVector2D pTargetPosition;
 	QVector<double> *pJointAngle;
 	QVector<double> *pLinkLength;
@@ -39,7 +39,6 @@ private:
 	QTimer *pAnimationTimer;
 	uint pActiveJoint, pIterationsPerformed, pMaxIterations;
 	uint pAnimationDelay;
-	uint pMaxLength;
 	bool pIsBusy;
 };
 
